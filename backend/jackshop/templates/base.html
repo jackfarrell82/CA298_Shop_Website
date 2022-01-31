@@ -8,16 +8,22 @@
     <body>
         <ul class="nav">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Active</a>
+              <a class="nav-link active" aria-current="page" href="http://127.0.0.1:8000/">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
+              <a class="nav-link" href="#">Products</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
+              <a class="nav-link" href="#">Help</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link disabled">Disabled</a>
+              {% if user.is_authenticated %}
+                Logged in as {{user.name}}
+                <br>
+                <a href="logout/">Logout</a>
+              {% else %}
+                <a href="login/">Login</a>
+              {% endif %}
             </li>
           </ul>
         {% block content %}
