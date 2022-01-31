@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %} Hello World {% endblock %}
+
+{% block content %}
+        <p>Hello World</p>
+        <ul>
+            {% for p in products %}
+                <li>{{p.name}} - €{{p.price}} - {{p.description}}</li>
+                
+                <a href="/products/{{p.id}}">
+                    <img src="{{p.image.url}}" width="193" height="130">
+                </a>
+            {% endfor %}
+        </ul>
+{% endblock %}

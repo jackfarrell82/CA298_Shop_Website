@@ -14,9 +14,13 @@ def index(request):
     # do some logic with models from the databasse
     # return some webpage to the user
 
+    return render(request, "index.html", {'products': products})
+
+def products(request):
+
     products = Product.objects.all()
 
-    return render(request, "index.html", {'products': products})
+    return render(request, "products.html", {'products': products})
 
 def product_individual(request, prodid):
     # get the products with id = prodid
@@ -53,11 +57,11 @@ def add_to_basket(request, prodid):
         basket = Basket(user_id=user).save()
     # get the product
     product = Product.objects.get(id=prodid)
-    sbi = BasketItem.objects.filter(basket_id=basket, product_id=product).first()
+    sbi = BasketItems.objects.filter(basket_id=basket, product_id=product).first()
     if sbi is None:
         # there is no basket item for that products
         # create one
-        sbi = BasketItem(basket_id=basket, product_id=product).save()
+        sbi = BasketItems(basket_id=basket, product_id=product).save()
     else:
         # a basket item already exists
         # just add 1 to the quantity
