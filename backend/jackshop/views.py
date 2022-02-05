@@ -68,3 +68,69 @@ def add_to_basket(request, prodid):
         sbi.quantity = sbi.quantity+1
         sbi.save()
     return render(request, 'product_individual.html', {'product':product, 'added':True})
+
+
+@login_required
+def show_basket(request):
+    # get user object
+    # does a basket exist? -> your basket is empty
+    # load all shopping basket items
+    # display them on the page
+    user = request.user
+    basket = Basket.objects.filter(user_id=user, is_active=True).first()
+    if basket is None:
+        return render(request, 'basket.html', {'empty':True})
+    else:
+        sbi = BasketItems.objects.filter(basket_id=basket)
+        # is the list empty?
+        if sbi.exists():
+            # normal flow
+            return render(request, 'basket.html', {'basket':basket, 'sbi':sbi})
+        else:
+            return render(request, 'basket.html', {'empty':True})
+
+@login_required
+def remove_item(request, sbi):
+    basketitem = BasketItems.objects.get(id=sbi)
+    if basketitem is None:
+        return redirect('/basket') # if error - redirect to shopping basket
+    else:
+        if basketitem.quantity > 1:
+            basketitem.quantity = basketitem.quantity-1
+            basketitem.save() # save our changes in the data base
+        else:
+            basketitem.delete() # delete the basket item
+    return redirect('/basket')
+
+@login_required
+def order(request):
+    # load in all the data
+    user = request.user
+    basket = Basket.obkects.filter(user_id=user, is_active=True).first()
+    if basket is None:
+        return redirect('/')
+    sbi = BasketItems.objects.filter(basket_id=basket)
+    if not sbi.exists():
+        return redirect('/')
+    # are we dealing with a POST or GET request
+    if request.method == "POST":
+        # check form is valid
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.user_id = user
+            order.basket_id = basket
+            total = 0.0
+            for item in sbi:
+                total += float(item.price())
+            order.total_price = total
+            order.save()
+            basket.is_active = False
+            basket.save()
+            return render(request, 'ordercomplete.html', {'order':order, 'basket':basket, 'sbi':sbi})
+        else:
+            return render(request, 'orderform.html', {'form':form, 'basket':basket, 'sbi':sbi})  
+    else:
+        # show the form
+        form = OrderForm()
+        return render(request, 'orderform.html', {'form':form, 'basket':basket, 'sbi':sbi})

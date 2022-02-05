@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %} Order Complete {% endblock %}
+
+{% block content %}
+<h1> Thank you for your order </h1>
+{% if empty %}
+    <p> Your shopping basket is empty </p>
+{% else %}
+    <table>
+        <tbody>
+            {% for item in sbi %}
+            <tr>
+                <td> {{ item.product_id.name }} - {{ item.product_id.description }} </td>
+                <td> <img src="{{item.product_id.image.url}}"  width="193" height="130"/> </td>
+                <td> {{ item.quantity }}</td>
+                <td> €{{ item.price }}</td>
+                <td> <a href="/removeitem/{{item.id}}"> Remove Item </a> </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+<p> Ship to: {{ order.shipping_addr }}</p>
+<p> Total Price: {{ order.total_price }}</p>
+
+{% endblock %}
