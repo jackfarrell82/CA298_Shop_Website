@@ -38,7 +38,7 @@ class UserSignupView(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        return redirect('')
+        return redirect('/')
 
 class UserLoginView(LoginView):
     template_name='login.html'
@@ -52,9 +52,10 @@ def add_to_basket(request, prodid):
     user = request.user
     # is there a shopping basket for the user
     basket = Basket.objects.filter(user_id=user, is_active=True).first()
-    if not basket:
+    if basket is None:
         # create a new one
-        basket = Basket(user_id=user).save()
+        Basket.objects.create(user_id=user)
+        basket = Basket.objects.filter(user_id=user, is_active=True).first()
     # get the product
     product = Product.objects.get(id=prodid)
     sbi = BasketItems.objects.filter(basket_id=basket, product_id=product).first()
@@ -106,7 +107,7 @@ def remove_item(request, sbi):
 def order(request):
     # load in all the data
     user = request.user
-    basket = Basket.obkects.filter(user_id=user, is_active=True).first()
+    basket = Basket.objects.filter(user_id=user, is_active=True).first()
     if basket is None:
         return redirect('/')
     sbi = BasketItems.objects.filter(basket_id=basket)
