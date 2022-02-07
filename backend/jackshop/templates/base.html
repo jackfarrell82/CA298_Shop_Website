@@ -20,6 +20,11 @@
             </li>
             <li class="nav-item">
               {% if user.is_authenticated %}
+              <a class="nav-link" href="/orderhistory">Order History</a>
+              {% endif %}
+            </li>
+            <li class="nav-item">
+              {% if user.is_authenticated %}
                 Logged in
                 <br>
                 <a href="/logout">Logout</a>

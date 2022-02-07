@@ -135,3 +135,9 @@ def order(request):
         # show the form
         form = OrderForm()
         return render(request, 'orderform.html', {'form':form, 'basket':basket, 'sbi':sbi})
+
+@login_required
+def previous_orders(request):
+    user = request.user
+    orders = Order.objects.filter(user_id=user)
+    return render(request, 'previous_orders.html', {'orders':orders})

@@ -15,5 +15,6 @@ urlpatterns = [
     path('products/', views.products, name="products"),
     path('basket/', views.show_basket, name="show_basket"),
     path('removeitem/<int:sbi>', views.remove_item, name="remove_item"),
-    path('order/', views.order, name="order")
+    path('order/', views.order, name="order"),
+    path('orderhistory/', views.previous_orders, name="order_history")
 ]
