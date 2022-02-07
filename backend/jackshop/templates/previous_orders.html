@@ -9,19 +9,19 @@
 <table>
     <thead>
         <tr>
-            <th>Order ID</th>
-            <th>Ordered on</th> 
-            <th>Shipping to</th>
-            <th>Total price</th>
+            <th> Order ID </th>
+            <th> Ordered on </th> 
+            <th> Shipping to </th>
+            <th> Total price </th>
         </tr>
     </thead>
     <tbody>
         {% for ord in orders %}
             <tr>
                 <td>{{ ord.id }}</td>
-                <td> {{ ord.datetime_ordered }}</td>
+                <td> {{ ord.date_ordered }}</td>
                 <td> {{ ord.shipping_addr  }}</td>
-                <td> {{ord.total_price }}</td>
+                <td> €{{ord.total_price }}</td>
             </tr>
         {% endfor %}
     </tbody>
