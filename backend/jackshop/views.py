@@ -4,8 +4,12 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework import viewsets
+from .serializers  import *
 from .models import *
 from .forms import *
+# from django.http.response import JsonResponse
 
 # Create your views here.
 
@@ -141,3 +145,43 @@ def previous_orders(request):
     user = request.user
     orders = Order.objects.filter(user_id=user)
     return render(request, 'previous_orders.html', {'orders':orders})
+
+def howdy():
+    return JsonResponse ({'status':'ok'})
+
+class ProductViewSet(viewsets.ModelViewSet):
+	queryset = Product.objects.all()
+	serializer_class = ProductSerializer
+
+class BasketViewSet(viewsets.ModelViewSet):
+  serializer_class = BasketSerializer
+  queryset = Basket.objects.all()
+  permission_classes = [IsAuthenticated]
+
+  def get_queryset(self):
+      user = self.request.user # get the current user
+      if user.is_superuser:
+          return Basket.objects.all() # return all the baskets if a superuser requests
+      else:
+          # For normal users, only return the current active basket
+          shopping_basket = Basket.objects.filter(user_id=user, is_active=True)
+          return shopping_basket
+
+class OrderViewSet(viewsets.ModelViewSet):
+    serializer_class = OrderSerializer
+    queryset = Order.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user # get the current user
+        if user.is_superuser:
+            return Order.objects.all() # return all the baskets if a superuser requests
+        else:
+            # For normal users, only return the current active basket
+            orders = Order.objects.filter(user_id=user)
+            return orders
+
+class APIUserViewSet(viewsets.ModelViewSet):
+    queryset = APIUser.objects.all()
+    serializer_class = APIUserSerializer
+    permission_classes = [IsAuthenticated, IsAdminUser]
