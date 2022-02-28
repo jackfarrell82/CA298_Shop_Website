@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework import viewsets
+from rest_framework import generics
 from .serializers  import *
 from .models import *
 from .forms import *
@@ -185,3 +186,23 @@ class APIUserViewSet(viewsets.ModelViewSet):
     queryset = APIUser.objects.all()
     serializer_class = APIUserSerializer
     permission_classes = [IsAuthenticated, IsAdminUser]
+
+class UserRegistrationAPIView(generics.CreateAPIView):
+    serializer_class = UserRegistrationSerializer
+    permission_classes = [AllowAny] #No login is needed to access this route
+    queryset = queryset = APIUser.objects.all()
+
+class AddBasketItemAPIView(generics.CreateAPIView):
+    serializer_class = AddBasketItemSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = BasketItems.objects.all()
+
+class RemoveBasketItemAPIView(generics.CreateAPIView):
+    serializer_class = RemoveBasketItemSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = BasketItems.objects.all()
+
+class CheckoutAPIView(generics.CreateAPIView):
+    serializer_class = CheckoutSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Order.objects.all()
