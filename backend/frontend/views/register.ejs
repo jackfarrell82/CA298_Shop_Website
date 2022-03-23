@@ -1,16 +1,18 @@
 <html>
     <head>
-			<title>Login Page</title>
+			<title>Register Page</title>
             <%- include('header') -%>
     </head>
     <body>
-        <h1>Login</h1>
-        <form id="login-form">
+        <h1>Register</h1>
+        <form id="register-form">
             <label for="username-input">Username</label>
             <input type="text" name="username-input" id="username" placeholder="Your username" required>
             <label for="password-input">Password</label>
             <input type="password" id="password" name="password-input" placeholder="Your password" required>
-            <button type="submit">Login</button>
+            <label for="username-input">Email</label>
+            <input type="text" name="email-input" id="email" placeholder="Your Email" required>
+            <button type="submit">Register</button>
         </form>
 				<script>
 				
@@ -21,7 +23,8 @@
                     let username = document.getElementById("username").value; 
                     // get the value in the password box
                     let password = document.getElementById("password").value;
-                    if(username == "")
+                    let email = document.getElementById("email").value;
+                    if( username == "")
                     {
                         alert("Username cannot be null");
                     }
@@ -29,34 +32,28 @@
                     {
                         alert("Password cannot be null");
                     }
+                    else if (email == "")
+                    {
+                        alert("Email cannot be null");
+                    }
                     else
                     {
-                        fetch("http://127.0.0.1:8000/api/token/", 
+                        fetch("http://127.0.0.1:8000/apiregister/", 
                         {
                             method: 'POST',
                             headers: {
                             'Accept': 'application/json',
                             'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify({username: username, password: password})
+                            body: JSON.stringify({username: username, password: password, email:email})
                             }).then(response=>response.json())
                             .then(data=>{
                                 console.log(data);
-                                if ('access' in data){
-                                    let accessToken = data['access'];
-                                    let refreshToken = data['refresh'];
-                                    localStorage.setItem("access", accessToken);
-                                    localStorage.setItem("refresh", refreshToken);
-                                    window.location.href = "/"; // the "/" is the homepage for node http://127.0.0.1:3000
-                                }
-                                else
-                                {
-                                    alert("username or password invalid");
-                                }
+
                         });
                 }
             }
-            let myform = document.getElementById("login-form"); // get the form 
+            let myform = document.getElementById("register-form"); // get the form 
             myform.addEventListener('submit', formValidator); // bind the validator function to the submit button for the form
 				</script>
 <%- include('footer') -%>

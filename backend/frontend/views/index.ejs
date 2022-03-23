@@ -1,26 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <%- include('header') -%>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
-    <ol id="productlist">
-
-    </ol>
+    <a href="/products" id="products">all products</a>
     <script>
-      let productlist = document.getElementById("productlist");
-      let req = "http://127.0.0.1:8000/api/products/"
-      fetch(req) // make a request to this endpoint
-			  .then(response => response.json()) // with our response, get the json data returned
-        .then(allproducts => allproducts.forEach(element => {
-                let productName = element.name
-                let newListelement = document.createElement("li")// create an li element 
-                newListelement.innerHTML = productName
-                productlist.appendChild(newListelement);
-          }));
+      window.onload = ()=>{
+        isLoggedIn();
+      }
     </script>
-  </body>
-</html>
+  <%- include('footer') -%>

@@ -1,0 +1,70 @@
+<%- include('header') -%>
+<body>
+    <div id="main">
+
+    </div>
+<script>
+    function displayCard(product_info){
+        let product_name = product_info['name'];
+        let quantity = product_info['quantity'];
+        let price = product_info['price'];
+        let productid = product_info['id'];
+        fetch("http://127.0.0.1:8000/products/"+productid)
+        .then(resp => resp.json())
+        .then(data => {
+            let price = data['price'];
+            let desc = data['description'];
+            let htmlString = "<div> <h1>"+product_name+"</h1><p>"+desc+"<p>"+price+"</p></div>"
+            let maindiv = document.getElementById("main");
+            let innerHTML = maindiv.innerHTML
+            maindiv.innerHTML = htmlString;
+
+            let removeFromCart = document.createElement("button");
+            removeFromCart.onclick = function(){
+                fetch("http://127.0.0.1/apiremove", {
+                    'method':'POST',
+                    'headers':{
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        'Authorization': 'Bearer '+token
+                    },
+                    'body': JSON.stringify({product_id:productid })
+                })
+                .then(resp => resp.json())
+                .then(data => {
+                    console.log("item removed from basket")
+                })
+            }
+            //add the button to the page
+        })
+    }
+
+    function buildCardPage(){
+        let token = localStorage.getItem("access");
+        if(token == null){
+            window.location = "/login";
+        }
+        fetch("http://127.0.0.1:8000/api/basket", {
+            'method':'GET',
+            'headers':{
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer '+token
+            }
+        })
+        .then(resp => resp.json())
+        .then(data => {
+            let basket = data[0];
+            let id = basket['id'];
+            let items = basket['items'];
+            items.forEach(element => {
+                displayCard(element);
+            });
+        });
+    }
+    window.onload = ()=>{
+        isLoggedIn();
+      }
+</script>
+</body>
+<%- include('footer') -%>

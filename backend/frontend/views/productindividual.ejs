@@ -1,0 +1,83 @@
+<%- include('header') -%>
+<li id="item">
+
+</li>
+<p id="button">
+
+</p>
+</body>
+<script>
+
+function show(name, desc, price, image)
+{
+    let n = document.createElement("li");
+    let d = document.createElement("p");
+    let p = document.createElement("li");
+    let i = document.createElement("img");
+
+    n.innerHTML = name;
+    d.innerHTML = desc;
+    p.innerHTML = "Price: " + price;
+    i.src = image;
+
+    document.getElementById("item").appendChild(n)
+    document.getElementById("item").appendChild(d)
+    document.getElementById("item").appendChild(p)
+    document.getElementById("item").appendChild(i)
+}
+
+function button(productID)
+{
+    let addToCart = document.createElement("button"); // create a button
+    addToCart.innerHTML = "Add to cart"; // set the text of the button 
+    document.getElementById("button").append(addToCart)
+    addToCart.onclick = ()=>{
+    // code for when the button is clicked
+        fetch('http://127.0.0.1:8000/apiadd/', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer '+localStorage.getItem("access")
+            },
+            body: JSON.stringify({
+                "product_id": parseInt(productID)
+            })
+        })
+        .then(response=>response.json())
+        .then(data=>{
+                
+                console.log(data)
+            });
+        };
+}
+
+window.onload = ()=>{
+    let params = window.location.search;
+  let urlParams = new URLSearchParams(params);
+  let productID = urlParams.get("id");
+  // http://127.0.0.1:8000/api/products/id 
+  if(productID != null && typeof(productID)!= 'undefined'){
+      fetch('http://127.0.0.1:8000/api/products/'+productID)
+      .then(resp => resp.json())
+      .then(data => {
+          console.log(data);
+          if('detail' in data){
+              // display some generic product not found error
+          }
+          else{
+              let name = data['name'];
+              let desc = data['description'];
+              let price = data['price'];
+              let image= data['image'];
+
+              show(name, desc, price, image)
+              
+          }
+      });
+  }
+  isLoggedIn();
+  button(productID);
+}
+</script>
+<%- include('footer') -%>
