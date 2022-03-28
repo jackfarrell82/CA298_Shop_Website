@@ -1,2 +1,54 @@
 <%- include('header') -%>
+<body>
+    <div id="main">
+        <a id="orderbutton" class="button" href="/checkout">Order</a>
+
+    </div>
+<script>
+  function displayCard(product_info){
+        let token = localStorage.getItem("access");
+        let addr = product_info['shipping_addr'];
+        let date = product_info['date_ordered'];
+        const event = new Date(date);
+        let price = product_info['total_price'];
+        let id = product_info['id'];
+
+        let htmlString = "<div> <h1> Order Num: "+id+"</h1><p>"+event.toUTCString()+"<br><p>Price: "+price+"<br><p> Shipped To " + addr +"</p></div>"
+        let maindiv = document.getElementById("main");
+        let innerHTML = maindiv.innerHTML
+        maindiv.innerHTML =  innerHTML+htmlString;
+           
+        }
+
+    function buildCardPage(){
+        let token = localStorage.getItem("access");
+        if(token == null){
+            window.location = "/login";
+        }
+        else
+        {
+            fetch("http://127.0.0.1:8000/api/orders", {
+                'method':'GET',
+                'headers':{
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    'Authorization': 'Bearer '+token
+                }
+            })
+            .then(resp => resp.json())
+            .then(data => {
+                console.log(data);
+                data.forEach(element => {
+                    console.log("element: " + element);
+                    displayCard(element);
+                });
+            });
+        }
+    }
+    window.onload = ()=>{
+        isLoggedIn();
+        buildCardPage();
+      }
+</script>
+</body>
 <%- include('footer') -%>

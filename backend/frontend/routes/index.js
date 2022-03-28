@@ -26,4 +26,16 @@ router.get('/register', function(req, res, next){
   res.render('register')
 });
 
+router.get('/checkout', function(req, res, next){
+  res.render('checkout')
+});
+
+router.get('/confirm', function(req, res, next){
+  res.render('confirm')
+});
+
+router.get('/orders', function(req, res, next){
+  res.render('orders')
+});
+
 module.exports = router;

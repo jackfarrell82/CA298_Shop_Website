@@ -1,41 +1,49 @@
 <%- include('header') -%>
 <body>
     <div id="main">
-
+        <a id="orderbutton" class="button" href="/checkout">Order</a>
     </div>
 <script>
     function displayCard(product_info){
-        let product_name = product_info['name'];
+        let token = localStorage.getItem("access");
         let quantity = product_info['quantity'];
         let price = product_info['price'];
-        let productid = product_info['id'];
-        fetch("http://127.0.0.1:8000/products/"+productid)
+        let productid = product_info['product_id'];
+        fetch("http://127.0.0.1:8000/api/products/" + productid)
         .then(resp => resp.json())
         .then(data => {
-            let price = data['price'];
+            console.log(data);
+            let name = data['name'];
             let desc = data['description'];
-            let htmlString = "<div> <h1>"+product_name+"</h1><p>"+desc+"<p>"+price+"</p></div>"
+            let img = data['image'];
+
+            let htmlString = "<div> <h1>"+name+"</h1><p>"+desc+"<br><p>Price: "+price+"<br><p>" + quantity +"</p></p><img style='width:50%;' src='"+img+"'></img></div>"
             let maindiv = document.getElementById("main");
             let innerHTML = maindiv.innerHTML
-            maindiv.innerHTML = htmlString;
+            maindiv.innerHTML =  innerHTML+htmlString;
 
             let removeFromCart = document.createElement("button");
-            removeFromCart.onclick = function(){
-                fetch("http://127.0.0.1/apiremove", {
+            removeFromCart.innerHTML = "remove from cart";
+            removeFromCart.id = "button-"+data['id'];
+            document.getElementById("main").appendChild(removeFromCart);
+            console.log("zfklglsdfgflks");
+            let butt = document.getElementById("button-"+data['id']);
+            butt.onmousedown = function(){
+                console.log("HELLO")
+                fetch("http://127.0.0.1:8000/apiremove/", {
                     'method':'POST',
                     'headers':{
                         "Accept": "application/json",
                         "Content-Type": "application/json",
-                        'Authorization': 'Bearer '+token
+                        'Authorization': 'Bearer '+ token
                     },
-                    'body': JSON.stringify({product_id:productid })
+                    'body': JSON.stringify({"product_id": parseInt(productid) })
                 })
                 .then(resp => resp.json())
                 .then(data => {
-                    console.log("item removed from basket")
+                    window.location.reload()
                 })
             }
-            //add the button to the page
         })
     }
 
@@ -44,26 +52,38 @@
         if(token == null){
             window.location = "/login";
         }
-        fetch("http://127.0.0.1:8000/api/basket", {
-            'method':'GET',
-            'headers':{
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-                'Authorization': 'Bearer '+token
-            }
-        })
-        .then(resp => resp.json())
-        .then(data => {
-            let basket = data[0];
-            let id = basket['id'];
-            let items = basket['items'];
-            items.forEach(element => {
-                displayCard(element);
+        else
+        {
+            fetch("http://127.0.0.1:8000/api/basket", {
+                'method':'GET',
+                'headers':{
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    'Authorization': 'Bearer '+token
+                }
+            })
+            .then(resp => resp.json())
+            .then(data => {
+                let basket = data[0];
+                let id = basket['id'];
+                let items = basket['items'];
+                console.log(data);
+                if(items.length == 0)
+                {
+                    let d = document.createElement("p")
+                    d.innerHTML = "Your basket is empty"
+                    document.getElementById("main").appendChild(d)
+                }
+                items.forEach(element => {
+                    console.log("element: " + element);
+                    displayCard(element);
+                });
             });
-        });
+        }
     }
     window.onload = ()=>{
         isLoggedIn();
+        buildCardPage();
       }
 </script>
 </body>
