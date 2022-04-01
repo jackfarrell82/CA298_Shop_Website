@@ -14,6 +14,10 @@
             <input type="text" name="email-input" id="email" placeholder="Your Email" required>
             <button type="submit">Register</button>
         </form>
+
+        <p id="page">
+
+        </p>
 				<script>
 				
                 function formValidator(event)
@@ -49,11 +53,33 @@
                             }).then(response=>response.json())
                             .then(data=>{
                                 console.log(data);
-
+                                LogIn(username, password);
+                                document.getElementById("page").innerHTML = "Logging in"
+                                window.setTimeout(() => {window.location.href = "/products";}, 3000);
                         });
                 }
             }
             let myform = document.getElementById("register-form"); // get the form 
             myform.addEventListener('submit', formValidator); // bind the validator function to the submit button for the form
-				</script>
+			function LogIn(username, password)
+        {
+            fetch("http://127.0.0.1:8000/api/token/", { 
+                    method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json'},
+                    body: JSON.stringify({username: username, password: password})
+                    }).then(response=>response.json())
+                    .then(data=>{
+                        console.log(data);
+                        if('access' in data){
+                            let accessToken = data['access'];
+                            let refreshToken = data['refresh'];
+                            localStorage.setItem("access", accessToken);
+                            localStorage.setItem("refresh", refreshToken);
+                        }
+                        else{
+                            document.getElementById("page").innerHTML = "Username / Password Invalid"
+                        }
+                    });
+        }	
+               
+               </script>
 <%- include('footer') -%>

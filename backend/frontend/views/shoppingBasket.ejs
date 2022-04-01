@@ -1,7 +1,14 @@
 <%- include('header') -%>
 <body>
-    <div id="main">
-        <a id="orderbutton" class="button" href="/checkout">Order</a>
+    <br>
+    <br>
+    <div id="main" class="border border-primary padding-small">
+
+    </div>
+    <div class="row">
+        <div class="col-6 col">
+          <button class="btn-block" onclick="window.location.href='/checkout'">Order</button>
+        </div>
     </div>
 <script>
     function displayCard(product_info){
@@ -17,13 +24,13 @@
             let desc = data['description'];
             let img = data['image'];
 
-            let htmlString = "<div> <h1>"+name+"</h1><p>"+desc+"<br><p>Price: "+price+"<br><p>" + quantity +"</p></p><img style='width:50%;' src='"+img+"'></img></div>"
+            let htmlString = "<div> <h1>"+name+"</h1><p>"+desc+"<br><p>Price: "+price+"<br><p> Quantity: " + quantity +"</p></p><img src='"+img+"'></img></div>"
             let maindiv = document.getElementById("main");
             let innerHTML = maindiv.innerHTML
             maindiv.innerHTML =  innerHTML+htmlString;
 
             let removeFromCart = document.createElement("button");
-            removeFromCart.innerHTML = "remove from cart";
+            removeFromCart.innerHTML = "Remove From Cart";
             removeFromCart.id = "button-"+data['id'];
             document.getElementById("main").appendChild(removeFromCart);
             console.log("zfklglsdfgflks");

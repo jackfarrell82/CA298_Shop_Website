@@ -1,10 +1,17 @@
 <html>
 	<head>
+		<link rel='stylesheet' href='https://unpkg.com/papercss@1.8.3/dist/paper.css' />
 		<!-- css and js libraries go here -->
 	</head>
-	<body>
-		<a href="/" id="home">home</a>
-		<a href="/login" id="auth-link">Login</a>
-		<a href="/shoppingBasket" id="basket">Shopping Basket</a>
-		<a href="/register" id="register">register </a>
-		<a href="/orders" id="orders">Orders</a>
+	<body class="sm-2 col background-primary">
+		<nav class="border fixed split-nav">
+			<div class="nav-brand">
+				<a href="/products" id="home">Home</a>
+				<a href="/login" id="auth-link">Login</a>
+			</div>
+				<ul class="inline">
+					<a href="/shoppingBasket" id="basket">Shopping Basket</a>
+					<a href="/register" id="register">Register </a>
+					<a href="/orders" id="orders">Orders</a>
+				</ul>
+		  </nav>

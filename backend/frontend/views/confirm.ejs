@@ -3,10 +3,10 @@
   <head>
     <%- include('header') -%>
     <title>Order Confirmed</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+		<link rel='stylesheet' href='https://unpkg.com/papercss@1.8.3/dist/paper.css' />
   </head>
   <body>
     <h1>Thank you!</h1>
     <p>Your order has been placed</p>
-    <a href="/index"> Return to Homepage</a>
+    <button class="btn-block" onclick="window.location.href='/products'">Return To Prodcuts Page</button>
   <%- include('footer') -%>

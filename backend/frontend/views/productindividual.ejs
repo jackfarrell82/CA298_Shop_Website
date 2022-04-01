@@ -1,7 +1,15 @@
 <%- include('header') -%>
-<li id="item">
-
-</li>
+<br>
+<br>
+<button class="btn-block" onclick="window.location.href='/products'">Return To Products Page</button>
+<div id="item" class="card" style="width: 20rem;">
+    <div id="item" class="card-body">
+      <h4 id="name-item" class="card-title"></h4>
+      <h5 id="desc-item" class="card-subtitle"></h5>
+      <p id="p-item" class="card-text"></p>
+    </div>
+    
+  </div>
 <p id="button">
 
 </p>
@@ -20,9 +28,9 @@ function show(name, desc, price, image)
     p.innerHTML = "Price: " + price;
     i.src = image;
 
-    document.getElementById("item").appendChild(n)
-    document.getElementById("item").appendChild(d)
-    document.getElementById("item").appendChild(p)
+    document.getElementById("name-item").appendChild(n)
+    document.getElementById("desc-item").appendChild(d)
+    document.getElementById("p-item").appendChild(p)
     document.getElementById("item").appendChild(i)
 }
 
@@ -46,7 +54,9 @@ function button(productID)
         })
         .then(response=>response.json())
         .then(data=>{
-                
+            let b = document.createElement("li");
+            b.innerHTML = "Item Added To Basket";
+            document.getElementById("button").appendChild(b)
                 console.log(data)
             });
         };
