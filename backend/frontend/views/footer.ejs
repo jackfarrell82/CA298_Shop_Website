@@ -11,7 +11,7 @@
       if(window.userLoggedIn){
             let loginLink = document.getElementById("auth-link");
             loginLink.innerHTML = "Logout";
-            loginLink.href = "/products";
+            loginLink.href = "/";
             loginLink.onclick = ()=>{ 
               localStorage.removeItem("access")
               localStorage.removeItem("refresh")
